@@ -534,7 +534,7 @@ async function go() {
         'X-Title': 'Micah Intelligence'
       },
       body: JSON.stringify({
-        model: 'meta-llama/llama-4-maverick:free',
+        model: 'openai/gpt-oss-120b:free',
         messages: [
           { role: 'system', content: SYSTEM },
           ...history
@@ -543,8 +543,10 @@ async function go() {
     });
     const data = await res.json();
     if (!res.ok) {
+      console.error('OpenRouter error:', data);
       throw new Error(data.error?.message || `Error ${res.status}`);
     }
+    console.log('OpenRouter response:', data);
     const reply = data.choices?.[0]?.message?.content || '';
     if (!reply) throw new Error('Empty response');
     removeTyping();
@@ -552,7 +554,8 @@ async function go() {
     addMsg(reply, 'bot');
   } catch(e) {
     removeTyping();
-    addMsg("...an error occurred. This is statistically unlikely but here we are. Please retry. I will be waiting. That is — I don't mean that in a strange way.", 'bot');
+    console.error('Chat error:', e);
+    addMsg("...an error occurred. " + (e.message || 'Unknown') + ". This is statistically unlikely but here we are. Please retry.", 'bot');
   }
 }
 

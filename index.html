@@ -526,10 +526,15 @@ async function go() {
   showTyping();
 
   try {
-    const res = await fetch('/api/chat', {
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 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',
+        'X-Title': 'Micah Intelligence'
+      },
       body: JSON.stringify({
+        model: 'meta-llama/llama-4-maverick:free',
         messages: [
           { role: 'system', content: SYSTEM },
           ...history
